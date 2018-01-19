@@ -59,6 +59,7 @@ namespace Minifier
             }
             File = new FileStream(pathToFile, FileMode.Open);
             Path = pathToFile;
+            File.Close();
         }
         #endregion
         #region Methods
@@ -67,23 +68,30 @@ namespace Minifier
         /// </summary>
         /// <returns>File without new lines</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public string RemoveNewLines()
+        private string RemoveNewLines()
         {
-            throw new NotImplementedException();
+            var reg = new Regex(@"\r\n");
+            return (reg.IsMatch(Path)) ? Path.Replace("\r\n", "") : Path.Replace("\n", "");
+        }
+
+        public void Minify()
+        {
+            RemoveNewLines();
+            if(Pairs.Regexes.Count == Pairs.Replaces.Count)
+            {
+                var count = Pairs.Regexes.Count;
+                var regexes = Pairs.Regexes;
+                var replaces = Pairs.Replaces;
+                for(var i = 0; i < count; i++)
+                {
+                    if (regexes[i].IsMatch(Path))
+                    {
+                        Path = regexes[i].Replace(Path, replaces[i]);
+                    }
+                }
+            }
         }
         #endregion 
-        #region Async Methods
-        /// <inheritdoc />
-        /// <summary>
-        /// Using (string).Replace function to remove all \n or \r\n asyncly
-        /// </summary>
-        /// <returns>File without new lines</returns>
-        /// <exception cref="T:System.NotImplementedException"></exception>
-        public async Task<string> AsyncRemoveNewLines()
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
         /// <summary>
         /// Disposing Resourses
         /// </summary>

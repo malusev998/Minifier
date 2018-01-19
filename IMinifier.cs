@@ -5,7 +5,6 @@ namespace Minifier
 {
     public interface IMinifier
     {
-        string RemoveNewLines();
-        Task<string> AsyncRemoveNewLines();
+        void Minify();
     }
 }
